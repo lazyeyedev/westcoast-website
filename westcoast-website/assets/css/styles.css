@@ -96,3 +96,6 @@ input:focus,select:focus,textarea:focus{outline:3px solid rgba(189,143,61,.45);b
 .lb-cap{text-align:center;color:#cdd6ea;padding:10px 16px 18px;font-size:.95rem}
 @media(max-width:640px){.lb-prev,.lb-next{top:auto;bottom:70px;transform:none}.lb-prev{left:14px}.lb-next{right:14px}}
 .g1{grid-template-columns:minmax(0,820px)}.back{margin:34px 0 0}.back a{font:700 .95rem var(--f-head);color:var(--navy);text-decoration:none;border-bottom:2px solid var(--gold)}
+.gallery.feature .shot:first-child{grid-column:1/-1}.gallery.feature .shot:first-child .zoom img{aspect-ratio:16/9}
+@media(max-width:640px){.gallery.feature .shot:first-child .zoom img{aspect-ratio:4/3}}
+.gallery img[src*="blueprint"]{object-position:center 38%}
