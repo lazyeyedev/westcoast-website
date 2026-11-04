@@ -1,6 +1,5 @@
 # WestCoast Construction & Consult website
 
-Static HTML/CSS/JS site. No build step. Open `index.html` or upload the folder to any host.
 
 ```
 index.html  about.html  services.html  projects.html  contact.html  404.html
