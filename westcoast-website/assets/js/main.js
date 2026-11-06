@@ -1,17 +1,34 @@
+/* WestCoast - site behaviour */
+document.documentElement.classList.remove('no-js');
 (function(){
+  var header=document.querySelector('.site-header');
   var btn=document.querySelector('.menu-btn'),nav=document.getElementById('nav');
-  if(btn){btn.addEventListener('click',function(){var o=nav.classList.toggle('open');btn.setAttribute('aria-expanded',o)});
-    nav.addEventListener('click',function(e){if(e.target.tagName==='A'){nav.classList.remove('open');btn.setAttribute('aria-expanded',false)}})}
+  function setMenu(o){nav.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Close menu':'Open menu')}
+  if(btn){
+    btn.addEventListener('click',function(){setMenu(!nav.classList.contains('open'))});
+    nav.addEventListener('click',function(e){if(e.target.closest('a'))setMenu(false)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&nav.classList.contains('open')){setMenu(false);btn.focus()}});
+  }
   var top=document.querySelector('.to-top');
-  if(top){window.addEventListener('scroll',function(){top.classList.toggle('show',window.scrollY>600)},{passive:true});
-    top.addEventListener('click',function(){window.scrollTo({top:0})})}
+  function onScroll(){var y=window.scrollY;if(header)header.classList.toggle('scrolled',y>8);if(top)top.classList.toggle('show',y>700)}
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  if(top)top.addEventListener('click',function(){window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});var m=document.getElementById('main');if(m){m.setAttribute('tabindex','-1');m.focus({preventScroll:true})}});
+
+  /* staggered reveal: siblings inside a [data-stagger] parent get increasing delays */
+  document.querySelectorAll('[data-stagger]').forEach(function(p){
+    [].forEach.call(p.children,function(c,i){c.classList.add('reveal');c.style.setProperty('--d',(i*0.08)+'s')});
+  });
   var items=document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});items.forEach(function(i){io.observe(i)})}
-  else items.forEach(function(i){i.classList.add('in')});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    items.forEach(function(i){io.observe(i)});
+  } else items.forEach(function(i){i.classList.add('in')});
+
   var y=document.getElementById('year');if(y)y.textContent=new Date().getFullYear();
+
   var f=document.getElementById('enquiry');
   if(f){f.addEventListener('submit',function(e){e.preventDefault();
-    var d=new FormData(f),body='Name: '+d.get('name')+'\nPhone: '+d.get('phone')+'\nEmail: '+d.get('email')+'\nInterest: '+d.get('interest')+'\n\n'+d.get('message');
+    var d=new FormData(f),body='Name: '+d.get('name')+'\nPhone: '+(d.get('phone')||'')+'\nEmail: '+d.get('email')+'\nInterest: '+d.get('interest')+'\n\n'+d.get('message');
     window.location.href='mailto:'+f.dataset.email+'?subject='+encodeURIComponent('Website enquiry: '+d.get('interest'))+'&body='+encodeURIComponent(body);
     document.getElementById('form-msg').classList.add('show');f.reset()})}
 })();
