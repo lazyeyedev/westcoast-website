@@ -562,3 +562,6 @@ textarea { min-height: 150px; resize: vertical; }
   .site-header, .to-top, .cta-card, .lb { display: none !important; }
   .hero, .page-hero, .on-dark { background: #fff !important; color: #000 !important; }
 }
+.gallery img[src*="tablet-briefing"] { object-position: center 12%; }
+.gallery img[src*="survey-plans"] { object-position: center 30%; }
+.svc-media img[src*="handshake"] { object-position: center 42%; }
