@@ -22,4 +22,4 @@ assets/icons/           favicon and app icons
 ## Still to do
 - Social links and the privacy policy link point to `#`.
 - `assets/img/design-site-photo.jpg` is an iStock preview; licence it or replace it.
-- The contact form opens the visitor's email app. Connect Formspree or similar for direct delivery.
+- The contact form sends enquiries to WhatsApp on +233 59 807 4217 (set in `contact.html` as `data-wa`), with an email fallback link. The visitor must tap send in WhatsApp.

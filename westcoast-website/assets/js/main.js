@@ -26,11 +26,23 @@ document.documentElement.classList.remove('no-js');
 
   var y=document.getElementById('year');if(y)y.textContent=new Date().getFullYear();
 
+  /* enquiry form: WhatsApp is the main channel, email is the fallback */
   var f=document.getElementById('enquiry');
-  if(f){f.addEventListener('submit',function(e){e.preventDefault();
-    var d=new FormData(f),body='Name: '+d.get('name')+'\nPhone: '+(d.get('phone')||'')+'\nEmail: '+d.get('email')+'\nInterest: '+d.get('interest')+'\n\n'+d.get('message');
-    window.location.href='mailto:'+f.dataset.email+'?subject='+encodeURIComponent('Website enquiry: '+d.get('interest'))+'&body='+encodeURIComponent(body);
-    document.getElementById('form-msg').classList.add('show');f.reset()})}
+  if(f){
+    var msg=document.getElementById('form-msg');
+    function lines(){var d=new FormData(f),v=function(k){return (d.get(k)||'').toString().trim()};
+      var out=['Name: '+v('name')];if(v('phone'))out.push('Phone: '+v('phone'));if(v('email'))out.push('Email: '+v('email'));
+      out.push('Interested in: '+v('interest'));out.push('');out.push(v('message'));return {text:out.join('\n'),interest:v('interest')}}
+    function done(t){msg.textContent=t;msg.classList.add('show')}
+    f.addEventListener('submit',function(e){e.preventDefault();
+      var m=lines(),url='https://wa.me/'+f.dataset.wa+'?text='+encodeURIComponent('Hello WestCoast, I would like to make an enquiry.\n\n'+m.text);
+      var w=window.open(url,'_blank');if(w){try{w.opener=null}catch(_){}}else{window.location.href=url}
+      done('WhatsApp should now be open with your enquiry. Tap send there to deliver it.')});
+    var em=document.getElementById('email-instead');
+    if(em)em.addEventListener('click',function(){if(!f.reportValidity())return;var m=lines();
+      window.location.href='mailto:'+f.dataset.email+'?subject='+encodeURIComponent('Website enquiry: '+m.interest)+'&body='+encodeURIComponent(m.text);
+      done('Your email app should open with the enquiry ready to send.')});
+  }
 })();
 /* Lightbox with zoom (buttons, wheel, double-click, pinch, drag) */
 (function(){
